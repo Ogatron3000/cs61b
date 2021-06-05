@@ -11,18 +11,26 @@ public class ArrayDeque<T> {
 
     private void resize() {
         T[] newItemsArr = (T []) new Object[items.length * 2];
-        System.arraycopy(items, (nextFirst + 1) % items.length, newItemsArr, 0, items.length - nextFirst - 1);
-        System.arraycopy(items, 0, newItemsArr, items.length - nextFirst, (nextFirst + 1) % items.length);
+
+        int nextFirstBack = (nextFirst + 1) % items.length;
+
+        System.arraycopy(items, nextFirstBack, newItemsArr, 0, items.length - nextFirstBack);
+        System.arraycopy(items, 0, newItemsArr, items.length - nextFirstBack, nextFirstBack);
 
         items = newItemsArr;
         nextFirst = items.length - 1;
-        nextLast = items.length - size + 1;
+        nextLast = size;
     }
 
     private void desize() {
         T[] newItemsArr = (T []) new Object[items.length / 2];
-        System.arraycopy(items, (nextFirst + 1) % items.length, newItemsArr, 0, Math.min(items.length - nextFirst, size));
-        System.arraycopy(items, 0, newItemsArr, Math.min(items.length - nextFirst, size), nextLast);
+
+        int nextFirstBack = (nextFirst + 1) % items.length;
+        int nextLastBack = (nextLast + items.length - 1) % items.length;
+
+        System.arraycopy(items, nextFirstBack, newItemsArr, 0, Math.min(size, items.length - nextFirstBack));
+        System.arraycopy(items, nextLastBack, newItemsArr, Math.min(size, items.length - nextFirstBack), items.length - nextFirstBack < size ? nextLast : 0);
+
         items = newItemsArr;
         nextFirst = items.length - 1;
         nextLast = items.length - size + 1;
@@ -30,9 +38,9 @@ public class ArrayDeque<T> {
 
     /** The Deque API */
     public void addFirst(T elem) {
-//        if (size == items.length) {
-//            resize();
-//        }
+        if (size == items.length) {
+            resize();
+        }
 
         items[nextFirst] = elem;
         nextFirst = (nextFirst + items.length - 1) % items.length;
@@ -40,9 +48,9 @@ public class ArrayDeque<T> {
     }
 
     public void addLast(T elem) {
-//        if (size == items.length) {
-//            resize();
-//        }
+        if (size == items.length) {
+            resize();
+        }
 
         items[nextLast] = elem;
         nextLast = (nextLast + 1) % items.length;
@@ -78,9 +86,9 @@ public class ArrayDeque<T> {
         nextFirst = (nextFirst + 1) % items.length;
         size -= 1;
 
-//        if (items.length > 16 && (float) size / items.length < 0.25) {
-//            desize();
-//        }
+        if (items.length > 16 && (float) size / items.length < 0.25) {
+            desize();
+        }
 
         return removedItem;
     }
@@ -95,9 +103,9 @@ public class ArrayDeque<T> {
         nextLast = (nextLast + items.length - 1) % items.length;
         size -= 1;
 
-//        if (items.length > 16 && (float) size / items.length < 0.25) {
-//            desize();
-//        }
+        if (items.length > 16 && (float) size / items.length < 0.25) {
+            desize();
+        }
 
         return removedItem;
     }
