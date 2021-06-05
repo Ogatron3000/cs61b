@@ -33,11 +33,13 @@ public class LinkedListDeque<T> {
     /** The Deque API */
     public void addFirst(T elem) {
         sentinel.next = new LinkedList(elem, sentinel.next, sentinel);
+        sentinel.next.next.prev = sentinel.next;
         size += 1;
     }
 
     public void addLast(T elem) {
         sentinel.prev = new LinkedList(elem, sentinel, sentinel.prev);
+        sentinel.prev.prev.next = sentinel.prev;
         size += 1;
     }
 
@@ -66,7 +68,7 @@ public class LinkedListDeque<T> {
 
         T removedItem = sentinel.next.item;
         sentinel.next = sentinel.next.next;
-        sentinel.next = sentinel;
+        sentinel.next.prev = sentinel;
         size -= 1;
         return removedItem;
     }
@@ -78,7 +80,7 @@ public class LinkedListDeque<T> {
 
         T removedItem = sentinel.prev.item;
         sentinel.prev = sentinel.prev.prev;
-        sentinel.prev = sentinel;
+        sentinel.prev.next = sentinel;
         size -= 1;
         return removedItem;
     }
