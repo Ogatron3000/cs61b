@@ -22,12 +22,18 @@ public class LinkedListDeque<T> {
         size = 0;
     }
 
-    public T getRecursive(int index) {
+    private T recursionHelper(int index, LinkedList pointer) {
         if (index == 0) {
-            return sentinel.item;
+            return pointer.item;
         }
 
-        return getRecursive(index - 1);
+        return recursionHelper(index - 1, pointer.next);
+    }
+
+    public T getRecursive(int index) {
+        LinkedList pointer = sentinel.next;
+
+        return recursionHelper(index, pointer);
     }
 
     /** The Deque API */
