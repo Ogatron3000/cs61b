@@ -1,12 +1,15 @@
 public class ArrayDeque<T> {
 
     private T[] items;
-    private int size = 0;
-    private int nextFirst = 0;
-    private int nextLast = 1;
+    private int size;
+    private int nextFirst;
+    private int nextLast;
 
     public ArrayDeque() {
         items = (T []) new Object[8];
+        size = 0;
+        nextFirst = 0;
+        nextLast = 1;
     }
 
     private void resize() {
@@ -94,7 +97,7 @@ public class ArrayDeque<T> {
     }
 
     public T removeLast() {
-        if (items.length == 0) {
+        if (size == 0) {
             return null;
         }
 
