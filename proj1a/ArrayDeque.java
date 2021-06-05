@@ -30,9 +30,9 @@ public class ArrayDeque<T> {
 
     /** The Deque API */
     public void addFirst(T elem) {
-        if (size == items.length) {
-            resize();
-        }
+//        if (size == items.length) {
+//            resize();
+//        }
 
         items[nextFirst] = elem;
         nextFirst = (nextFirst + items.length - 1) % items.length;
@@ -40,9 +40,9 @@ public class ArrayDeque<T> {
     }
 
     public void addLast(T elem) {
-        if (size == items.length) {
-            resize();
-        }
+//        if (size == items.length) {
+//            resize();
+//        }
 
         items[nextLast] = elem;
         nextLast = (nextLast + 1) % items.length;
@@ -78,9 +78,9 @@ public class ArrayDeque<T> {
         nextFirst = (nextFirst + 1) % items.length;
         size -= 1;
 
-        if (items.length > 16 && (float) size / items.length < 0.25) {
-            desize();
-        }
+//        if (items.length > 16 && (float) size / items.length < 0.25) {
+//            desize();
+//        }
 
         return removedItem;
     }
@@ -95,9 +95,9 @@ public class ArrayDeque<T> {
         nextLast = (nextLast + items.length - 1) % items.length;
         size -= 1;
 
-        if (items.length > 16 && (float) size / items.length < 0.25) {
-            desize();
-        }
+//        if (items.length > 16 && (float) size / items.length < 0.25) {
+//            desize();
+//        }
 
         return removedItem;
     }
