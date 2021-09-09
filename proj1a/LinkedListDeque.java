@@ -1,28 +1,27 @@
 public class LinkedListDeque<T> {
-
-    private LinkedList sentinel;
-    private int size;
-
-    public class LinkedList {
+    private class Node {
+        private Node prev;
         private T item;
-        private LinkedList next;
-        private LinkedList prev;
+        private Node next;
 
-        public LinkedList(T elem, LinkedList nextList, LinkedList prevList) {
+        public Node(Node prevNode, T elem, Node nextNode) {
+            prev = prevNode;
             item = elem;
-            next = nextList;
-            prev = prevList;
+            next = nextNode;
         }
     }
 
+    private Node sentinel;
+    private int size;
+
     public LinkedListDeque() {
-        sentinel = new LinkedList(null, null, null);
+        sentinel = new Node(null, null, null);
         sentinel.next = sentinel;
         sentinel.prev = sentinel;
         size = 0;
     }
 
-    private T recursionHelper(int index, LinkedList pointer) {
+    private T recursionHelper(int index, Node pointer) {
         if (index == 0) {
             return pointer.item;
         }
@@ -31,20 +30,20 @@ public class LinkedListDeque<T> {
     }
 
     public T getRecursive(int index) {
-        LinkedList pointer = sentinel.next;
+        Node pointer = sentinel.next;
 
         return recursionHelper(index, pointer);
     }
 
     /** The Deque API */
     public void addFirst(T elem) {
-        sentinel.next = new LinkedList(elem, sentinel.next, sentinel);
+        sentinel.next = new Node(sentinel, elem, sentinel.next);
         sentinel.next.next.prev = sentinel.next;
         size += 1;
     }
 
     public void addLast(T elem) {
-        sentinel.prev = new LinkedList(elem, sentinel, sentinel.prev);
+        sentinel.prev = new Node(sentinel.prev, elem, sentinel);
         sentinel.prev.prev.next = sentinel.prev;
         size += 1;
     }
@@ -59,7 +58,7 @@ public class LinkedListDeque<T> {
 
     public void printDeque() {
 
-        LinkedList pointer = sentinel.next;
+        Node pointer = sentinel.next;
 
         for (int i = 0; i < size; i++) {
             System.out.print(pointer.item + " ");
@@ -93,7 +92,7 @@ public class LinkedListDeque<T> {
 
     public T get(int index) {
 
-        LinkedList pointer = sentinel.next;
+        Node pointer = sentinel.next;
 
         for (int i = 0; i <= size; i++) {
             if (i == index) {

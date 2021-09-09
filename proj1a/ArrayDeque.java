@@ -13,30 +13,20 @@ public class ArrayDeque<T> {
     }
 
     private void resize() {
-        T[] newItemsArr = (T []) new Object[items.length * 2];
+        T[] newItemsArr;
+        if (size == items.length) {
+            newItemsArr = (T []) new Object[items.length * 2];
+        } else {
+            newItemsArr = (T []) new Object[items.length / 2];
+        }
 
-        int nextFirstBack = (nextFirst + 1) % items.length;
-
-        System.arraycopy(items, nextFirstBack, newItemsArr, 0, items.length - nextFirstBack);
-        System.arraycopy(items, 0, newItemsArr, items.length - nextFirstBack, nextFirstBack);
+        for (int i = 0, start = (nextFirst + 1) % items.length; i < size; i += 1, start = (start + 1) % items.length) {
+            newItemsArr[i] = items[start];
+        }
 
         items = newItemsArr;
         nextFirst = items.length - 1;
         nextLast = size;
-    }
-
-    private void desize() {
-        T[] newItemsArr = (T []) new Object[items.length / 2];
-
-        int nextFirstBack = (nextFirst + 1) % items.length;
-        int nextLastBack = (nextLast + items.length - 1) % items.length;
-
-        System.arraycopy(items, nextFirstBack, newItemsArr, 0, Math.min(size, items.length - nextFirstBack));
-        System.arraycopy(items, nextLastBack, newItemsArr, Math.min(size, items.length - nextFirstBack), items.length - nextFirstBack < size ? nextLast : 0);
-
-        items = newItemsArr;
-        nextFirst = items.length - 1;
-        nextLast = items.length - size + 1;
     }
 
     /** The Deque API */
@@ -73,7 +63,7 @@ public class ArrayDeque<T> {
 
         for (int i = start; i != nextFirst; i = (i + 1) % items.length) {
             if (items[i] == null) {
-                continue;
+                break;
             }
             System.out.print(items[i] + " ");
         }
@@ -84,13 +74,13 @@ public class ArrayDeque<T> {
             return null;
         }
 
-        T removedItem = items[(nextFirst + 1) % items.length];
-        items[(nextFirst + 1) % items.length] = null;
-        nextFirst = (nextFirst + 1) % items.length;
+        nextFirst = (nextFirst + 1) % items.length; // new next first
+        T removedItem = items[nextFirst];
+        items[nextFirst] = null;
         size -= 1;
 
-        if (items.length > 16 && (float) size / items.length < 0.25) {
-            desize();
+        if (items.length >= 16 && (float) size / items.length < 0.25) {
+            resize();
         }
 
         return removedItem;
@@ -101,13 +91,14 @@ public class ArrayDeque<T> {
             return null;
         }
 
-        T removedItem = items[(nextLast + items.length - 1) % items.length];
-        items[(nextLast + items.length - 1) % items.length] = null;
-        nextLast = (nextLast + items.length - 1) % items.length;
+        nextLast = (nextLast + items.length - 1) % items.length; // new next last
+        T removedItem = items[nextLast];
+        items[nextLast] = null;
+
         size -= 1;
 
-        if (items.length > 16 && (float) size / items.length < 0.25) {
-            desize();
+        if (items.length >= 16 && (float) size / items.length < 0.25) {
+            resize();
         }
 
         return removedItem;
